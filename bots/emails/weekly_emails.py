@@ -5,6 +5,15 @@
 # TO USE THIS SCRIPT, ALLOW LESS SECURE APPS TO ACCESS ACCOUNT
 # AS WELL AS THE DISPLAY UNLOCK CAPTCHA.
 
+# ToDo:
+# add a timeout that will use a default email if not responding
+#
+#
+#
+#
+#
+
+
 import numpy as np
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -26,6 +35,7 @@ msg = MIMEMultipart('alternative')
 msg['Subject'] = subject
 msg['From'] = config.username
 msg.attach(html)
+
 # lets confirm with kevin that it works
 config.confirmation(email_id,bFound, subject, request_email_uid, msg)
 
