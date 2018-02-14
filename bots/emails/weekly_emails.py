@@ -6,19 +6,20 @@
 # AS WELL AS THE DISPLAY UNLOCK CAPTCHA.
 
 # ToDo:
-# add a timeout that will use a default email if not responding
-#
-#
-#
-#
-#
+# create a new email template
 
+# the problem with the mailchimp template is that there are redirects
+# and other imbeded links that we still want to use,
+# but that route to their site or use their assets.
+
+# what do we do after timeout? timeout for subject-request --> default subject-request
+# timeout for confirmation? send out default or do not send at all????
 
 import numpy as np
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import config
-
+import pdb
 ### PROCEDURE ###
 
 # an id specific to this email
@@ -28,16 +29,22 @@ print("Email ID: %s"%email_id)
 html_string = config.html
 html = MIMEText(html_string, 'html')
 
-# now lets get header info
-bFound, subject, request_email_uid = config.get_header_info(email_id)
+# now lets get subject and title from decider (Kevin)
+bFound, subject, request_email_uid = config.get_subject(email_id)
 
 msg = MIMEMultipart('alternative')
-msg['Subject'] = subject
 msg['From'] = config.username
+msg['Subject'] = subject
 msg.attach(html)
 
 # lets confirm with kevin that it works
-config.confirmation(email_id,bFound, subject, request_email_uid, msg)
+confirmation, subject = config.confirmation(email_id, bFound, subject, request_email_uid, msg)
+msg['Subject'] = subject
+#pdb.set_trace()
+
+if confirmation == False:
+    print('Confirmation == False\nAborting...')
+    sys.exit()
 
 for email in config.recipients:
     print('Sending Finalized Email to: %s'%(email), end='\r')
